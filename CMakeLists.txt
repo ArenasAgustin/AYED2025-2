@@ -10,6 +10,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+enable_testing()
+
 # Get all direct children of the current directory
 file(GLOB CHILDREN RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*)
 
