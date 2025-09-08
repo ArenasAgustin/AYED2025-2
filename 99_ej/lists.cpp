@@ -93,22 +93,58 @@ void List<T>::print()
     getTail()->print();
 }
 
+// Implementación del método get
+template <typename T>
+T List<T>::get(int index)
+{
+    if (index < 0 || index >= lenght)
+        throw std::runtime_error("El indice no es valido");
+
+    int currentIndex = 0;
+    Node<T> *current = head;
+
+    while (index != currentIndex)
+    {
+        current = current->next;
+        currentIndex++;
+    }
+
+    return current->value;
+}
+
+// Implementación del método slice
 template <typename T>
 List<T> *List<T>::slice(int start, int end)
 {
     if (start < 0 || end > lenght || start >= end)
-        throw std::out_of_range("Índices fuera de rango");
+        throw std::runtime_error("Índices fuera de rango");
 
     List<T> *slicedList = new List<T>();
-    Node<T> *current = head;
 
-    for (int i = 0; i < end; ++i)
+    T *tempArray = new T[end - start];
+    int tempIndex = 0;
+
+    Node<T> *current = head;
+    int currentIndex = 0;
+
+    while (current != nullptr && currentIndex < end)
     {
-        if (i >= start)
-            slicedList->push(current->value);
+        if (currentIndex >= start)
+        {
+            tempArray[tempIndex] = current->value;
+            tempIndex++;
+        }
 
         current = current->next;
+        currentIndex++;
     }
+
+    for (int i = tempIndex - 1; i >= 0; i--)
+    {
+        slicedList->push(tempArray[i]);
+    }
+
+    delete[] tempArray;
 
     return slicedList;
 }

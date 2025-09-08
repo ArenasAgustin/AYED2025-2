@@ -25,6 +25,7 @@ public:
     int getLenght();                    // Obtener el tamaño
     List<T> *getTail();                 // Obtener la sublista sin el primer nodo
     void print();                       // Imprimir la lista
+    T get(int index);                   // Obtener valor en índice
     List<T> *slice(int start, int end); // Obtener una sublista
 
 private:

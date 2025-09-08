@@ -10,5 +10,11 @@ int main()
     list->push(1);
     list->print();
 
+    std::cout << list->getHead() << std::endl;
+    std::cout << list->getLenght() << std::endl;
+
+    delete list;
+    delete node;
+
     return 0;
 }
