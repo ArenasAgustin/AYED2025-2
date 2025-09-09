@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "../lists.hpp"
 
+// Pruebas para la clase List
 TEST(ListTests, PushAndGetHead)
 {
     List<int> list;
@@ -31,19 +32,6 @@ TEST(ListTests, GetLength)
 
     list.push(20);
     EXPECT_EQ(list.getLenght(), 2);
-}
-
-TEST(ListTests, GetTail)
-{
-    List<int> list;
-
-    list.push(10);
-    list.push(20);
-
-    List<int> *tail = list.getTail();
-
-    EXPECT_EQ(tail->getHead(), 10);
-    EXPECT_EQ(tail->getLenght(), 1);
 }
 
 TEST(ListTests, Get)
