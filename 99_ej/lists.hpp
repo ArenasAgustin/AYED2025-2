@@ -8,10 +8,12 @@ template <typename T>
 class Stack : public ListBase<T>
 {
 public:
-    Stack();                     // Constructor
-    ~Stack();                    // Destructor
-    T top() const;               // Obtener el valor del tope
-    void print() const override; // Imprimir la pila
+    Stack();                              // Constructor
+    Stack(Node<T> *head);                 // Constructor con nodo inicial
+    ~Stack();                             // Destructor
+    T top() const;                        // Obtener el valor del tope
+    void print() const override;          // Imprimir la pila
+    ListBase<T> *getTail() const override; // Obtener la sublista sin el primer nodo
 };
 
 // Definición de la clase Lista que hereda de ListBase
