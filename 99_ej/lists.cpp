@@ -25,18 +25,8 @@ void List<T>::print() const
     }
 
     this->head->print();
-    this->getTail()->print();
+    this->getRest()->print();
 }
-
-// Implementación del método getTail de la clase List
-// template <typename T>
-// List<T> *List<T>::getTail() const
-// {
-//     if (this->isEmpty())
-//         throw std::runtime_error("Está vacía");
-
-//     return new List<T>(this->head->next);
-// }
 
 // Implementación del método get
 template <typename T>
@@ -124,14 +114,51 @@ void Stack<T>::print() const
     }
 
     this->head->print();
-    this->getTail()->print();
+    this->getRest()->print();
+}
+
+// Implementaciones de Queue
+// Cosntructores y destructor
+template <typename T>
+Queue<T>::Queue() : ListBase<T>(), tail(nullptr) {}
+template <typename T>
+Queue<T>::Queue(Node<T> *head) : ListBase<T>(head), tail(head)
+{
+    if (head != nullptr)
+    {
+        while (tail->next != nullptr)
+        {
+            tail = tail->next;
+        }
+    }
+}
+template <typename T>
+Queue<T>::~Queue() {} // El destructor de la clase base se encarga de la limpieza
+
+// Implementación del método print de la clase Queue
+template <typename T>
+void Queue<T>::print() const
+{
+    std::cout << "[COLA] ";
+
+    if (this->isEmpty())
+    {
+        std::cout << "La cola está vacía." << std::endl;
+        return;
+    }
+
+    this->head->print();
+    this->getRest()->print();
 }
 
 // Como estamos trabajado con archivos separados, necesitamos instanciar las clases genéricas que vamos a usar
 // Si no lo hacemos, el compilador no generará el código para estas clases y obtendremos errores de "símbolo no definido" durante el enlace
 template class List<int>;
 template class Stack<int>;
+template class Queue<int>;
 template class List<double>;
 template class Stack<double>;
+template class Queue<double>;
 template class List<std::string>;
 template class Stack<std::string>;
+template class Queue<std::string>;

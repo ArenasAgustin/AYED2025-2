@@ -5,7 +5,7 @@
 // Implementaciones de Node
 // Cosntructores y destructor
 template <typename T>
-Node<T>::Node(T val) : value(val), next(nullptr) {}
+Node<T>::Node(T val) : value(val), next(nullptr), prev(nullptr) {}
 template <typename T>
 Node<T>::~Node() {}
 
@@ -39,7 +39,7 @@ ListBase<T>::~ListBase()
 
 // Implementación del método push
 template <typename T>
-void ListBase<T>::push(T val) // Quitar const
+void ListBase<T>::push(T val)
 {
     Node<T> *newNode = new Node<T>(val);
     newNode->next = head;
@@ -49,7 +49,7 @@ void ListBase<T>::push(T val) // Quitar const
 
 // Implementación del método pop
 template <typename T>
-void ListBase<T>::pop(T val) // Quitar const
+void ListBase<T>::pop(T val)
 {
     if (isEmpty())
         throw std::runtime_error("La lista está vacía");
@@ -84,9 +84,9 @@ int ListBase<T>::getLenght() const
     return lenght;
 }
 
-// Implementación del método getTail
+// Implementación del método getRest
 template <typename T>
-ListBase<T> *ListBase<T>::getTail() const
+ListBase<T> *ListBase<T>::getRest() const
 {
     if (isEmpty())
         throw std::runtime_error("Está vacía");
@@ -107,7 +107,7 @@ void ListBase<T>::print() const
     }
 
     head->print();
-    getTail()->print();
+    getRest()->print();
 }
 
 // Como estamos trabajado con archivos separados, necesitamos instanciar las clases genéricas que vamos a usar

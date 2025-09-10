@@ -7,6 +7,7 @@ struct Node
 {
     T value;       // Valor del nodo
     Node<T> *next; // Puntero al siguiente nodo
+    Node<T> *prev; // Puntero al nodo anterior
     Node(T val);   // Constructor
     ~Node();       // Destructor
     void print();  // Método para imprimir el nodo
@@ -20,12 +21,12 @@ public:
     ListBase();                           // Constructor
     ListBase(Node<T> *head);              // Constructor con nodo inicial
     ~ListBase();                          // Destructor
-    void push(T val);                     // Agregar al inicio (NO const - modifica la lista)
-    void pop(T val);                      // Eliminar el primer elemento (NO const - modifica la lista)
+    void push(T val);                     // Agregar al inicio
+    void pop(T val);                      // Eliminar el primer elemento
     bool isEmpty() const;                 // Verificar si está vacía
     T getHead() const;                    // Obtener valor del primer nodo
     int getLenght() const;                // Obtener el tamaño
-    virtual ListBase<T> *getTail() const; // Obtener la sublista sin el primer nodo
+    virtual ListBase<T> *getRest() const; // Obtener la sublista sin el primer nodo
     virtual void print() const;           // Imprimir la lista
 
 protected:         // Cambiar a protected para que las clases derivadas puedan acceder

@@ -27,4 +27,17 @@ public:
     List<T> *slice(int start, int end); // Obtener una sublista
 };
 
+// Definición de la clase Lista que hereda de ListBase
+template <typename T>
+class Queue : public ListBase<T>
+{
+public:
+    Queue();                     // Constructor
+    Queue(Node<T> *head);        // Constructor con nodo inicial
+    ~Queue();                    // Destructor
+    void print() const override; // Imprimir la lista
+private:
+    Node<T> *tail; // Puntero al último nodo
+};
+
 #endif // LISTS_HPP
