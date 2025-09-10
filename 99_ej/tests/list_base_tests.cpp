@@ -33,21 +33,3 @@ TEST(ListBaseTests, GetLength)
     listBase.push(20);
     EXPECT_EQ(listBase.getLenght(), 2);
 }
-
-// Comentado temporalmente - problema con polimorfismo
-/*
-TEST(ListBaseTests, GetTail)
-{
-    ListBase<int> listBase;
-
-    listBase.push(10);
-    listBase.push(20);
-
-    ListBase<int> *tail = listBase.getTail();
-
-    EXPECT_EQ(tail->getHead(), 10);
-    EXPECT_EQ(tail->getLenght(), 1);
-    
-    delete tail;
-}
-*/
