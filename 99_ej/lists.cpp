@@ -127,13 +127,49 @@ Queue<T>::Queue(Node<T> *head) : ListBase<T>(head), tail(head)
     if (head != nullptr)
     {
         while (tail->next != nullptr)
-        {
             tail = tail->next;
-        }
     }
 }
 template <typename T>
 Queue<T>::~Queue() {} // El destructor de la clase base se encarga de la limpieza
+
+// Implementación del método enqueue
+template <typename T>
+void Queue<T>::enqueue(T val)
+{
+    Node<T> *newNode = new Node<T>(val);
+    if (this->isEmpty())
+    {
+        this->head = newNode;
+        tail = newNode;
+    }
+    else
+    {
+        tail->next = newNode;
+        newNode->prev = tail; // Actualizar el puntero prev del nuevo nodo
+        tail = newNode;
+    }
+    this->lenght++;
+}
+
+// Implementación del método dequeue
+template <typename T>
+void Queue<T>::dequeue(T val)
+{
+    if (this->isEmpty())
+        throw std::runtime_error("La cola está vacía");
+
+    Node<T> *temp = this->head;
+    this->head = this->head->next;
+
+    if (this->head != nullptr)
+        this->head->prev = nullptr; // Actualizar el puntero prev del nuevo head
+    else
+        tail = nullptr; // Si la lista queda vacía, actualizar tail a nullptr
+
+    delete temp;
+    this->lenght--;
+}
 
 // Implementación del método print de la clase Queue
 template <typename T>

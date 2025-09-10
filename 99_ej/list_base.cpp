@@ -33,6 +33,7 @@ ListBase<T>::~ListBase()
     {
         Node<T> *temp = head;
         head = head->next;
+
         delete temp;
     }
 }
@@ -42,8 +43,14 @@ template <typename T>
 void ListBase<T>::push(T val)
 {
     Node<T> *newNode = new Node<T>(val);
+
     newNode->next = head;
+
+    if (head != nullptr)
+        head->prev = newNode;
+
     head = newNode;
+
     lenght++;
 }
 
@@ -56,7 +63,12 @@ void ListBase<T>::pop(T val)
 
     Node<T> *temp = head;
     head = head->next;
+
+    if (head != nullptr)
+        head->prev = nullptr;
+
     delete temp;
+
     lenght--;
 }
 

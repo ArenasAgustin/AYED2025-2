@@ -35,6 +35,8 @@ public:
     Queue();                     // Constructor
     Queue(Node<T> *head);        // Constructor con nodo inicial
     ~Queue();                    // Destructor
+    void enqueue(T val);         // Agregar al final
+    void dequeue(T val);         // Eliminar el primer elemento
     void print() const override; // Imprimir la lista
 private:
     Node<T> *tail; // Puntero al último nodo
