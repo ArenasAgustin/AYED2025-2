@@ -29,14 +29,14 @@ void List<T>::print() const
 }
 
 // Implementación del método getTail de la clase List
-template <typename T>
-List<T> *List<T>::getTail() const
-{
-    if (this->isEmpty())
-        throw std::runtime_error("Está vacía");
+// template <typename T>
+// List<T> *List<T>::getTail() const
+// {
+//     if (this->isEmpty())
+//         throw std::runtime_error("Está vacía");
 
-    return new List<T>(this->head->next);
-}
+//     return new List<T>(this->head->next);
+// }
 
 // Implementación del método get
 template <typename T>

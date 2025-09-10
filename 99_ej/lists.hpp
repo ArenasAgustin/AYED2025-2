@@ -23,7 +23,6 @@ public:
     List(Node<T> *head);                // Constructor con nodo inicial
     ~List();                            // Destructor
     void print() const override;        // Imprimir la lista
-    List<T> *getTail() const override;  // Obtener la sublista sin el primer nodo
     T get(int index);                   // Obtener valor en índice
     List<T> *slice(int start, int end); // Obtener una sublista
 };
