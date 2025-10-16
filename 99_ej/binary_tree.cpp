@@ -1,320 +1,8 @@
 #include <iostream>
 
 template <typename T>
-class BinaryNode        delete tree;
-    }
-
-    // ==========================================
-    // TESTS DE REMOVE
-    // ==========================================
-
-    {
-        // Remove: eliminar nodo hoja
-        BinaryTree<int> *tree = new BinaryTree<int>();
-        tree->add(50);
-        tree->add(30);
-        tree->add(70);
-        tree->add(20);
-        tree->add(40);
-
-        /*
-         * Antes:     50
-         *           /  \
-         *         30    70
-         *        /  \
-         *       20  40
-         */
-
-        std::cout << std::endl
-                  << "=== Remove nodo hoja (20) ===" << std::endl;
-        std::cout << "Antes:" << std::endl;
-        tree->print_in_order(); // 20, 30, 40, 50, 70
-
-        std::cout << "Remove 20: " << (tree->remove(20) ? "Eliminado" : "No encontrado") << std::endl;
-        std::cout << "Despues:" << std::endl;
-        tree->print_in_order(); // 30, 40, 50, 70
-
-        std::cout << "Buscar 20: " << (tree->contains(20) ? "Encontrado" : "No encontrado") << std::endl;
-
-        delete tree;
-    }
-
-    {
-        // Remove: eliminar nodo con un hijo izquierdo
-        BinaryTree<int> *tree = new BinaryTree<int>();
-        tree->add(50);
-        tree->add(30);
-        tree->add(70);
-        tree->add(20);
-
-        /*
-         * Antes:     50
-         *           /  \
-         *         30    70
-         *        /
-         *       20
-         */
-
-        std::cout << std::endl
-                  << "=== Remove nodo con hijo izquierdo (30) ===" << std::endl;
-        std::cout << "Antes:" << std::endl;
-        tree->print_in_order(); // 20, 30, 50, 70
-
-        std::cout << "Remove 30: " << (tree->remove(30) ? "Eliminado" : "No encontrado") << std::endl;
-        std::cout << "Despues:" << std::endl;
-        tree->print_in_order(); // 20, 50, 70
-
-        delete tree;
-    }
-
-    {
-        // Remove: eliminar nodo con un hijo derecho
-        BinaryTree<int> *tree = new BinaryTree<int>();
-        tree->add(50);
-        tree->add(30);
-        tree->add(70);
-        tree->add(80);
-
-        /*
-         * Antes:     50
-         *           /  \
-         *         30    70
-         *                \
-         *                80
-         */
-
-        std::cout << std::endl
-                  << "=== Remove nodo con hijo derecho (70) ===" << std::endl;
-        std::cout << "Antes:" << std::endl;
-        tree->print_in_order(); // 30, 50, 70, 80
-
-        std::cout << "Remove 70: " << (tree->remove(70) ? "Eliminado" : "No encontrado") << std::endl;
-        std::cout << "Despues:" << std::endl;
-        tree->print_in_order(); // 30, 50, 80
-
-        delete tree;
-    }
-
-    {
-        // Remove: eliminar nodo con dos hijos
-        BinaryTree<int> *tree = new BinaryTree<int>();
-        tree->add(50);
-        tree->add(30);
-        tree->add(70);
-        tree->add(20);
-        tree->add(40);
-        tree->add(60);
-        tree->add(80);
-
-        /*
-         * Antes:     50
-         *           /  \
-         *         30    70
-         *        /  \   /  \
-         *       20  40 60  80
-         */
-
-        std::cout << std::endl
-                  << "=== Remove nodo con dos hijos (30) ===" << std::endl;
-        std::cout << "Antes:" << std::endl;
-        tree->print_in_order(); // 20, 30, 40, 50, 60, 70, 80
-
-        std::cout << "Remove 30: " << (tree->remove(30) ? "Eliminado" : "No encontrado") << std::endl;
-        std::cout << "Despues (30 reemplazado por su sucesor 40):" << std::endl;
-        tree->print_in_order(); // 20, 40, 50, 60, 70, 80
-
-        std::cout << "Buscar 30: " << (tree->contains(30) ? "Encontrado" : "No encontrado") << std::endl;
-        std::cout << "Buscar 40: " << (tree->contains(40) ? "Encontrado" : "No encontrado") << std::endl;
-
-        delete tree;
-    }
-
-    {
-        // Remove: eliminar la raíz (caso hoja)
-        BinaryTree<int> *tree = new BinaryTree<int>();
-        tree->add(42);
-
-        std::cout << std::endl
-                  << "=== Remove raiz (unico elemento) ===" << std::endl;
-        std::cout << "Antes:" << std::endl;
-        tree->print_in_order(); // 42
-
-        std::cout << "Remove 42: " << (tree->remove(42) ? "Eliminado" : "No encontrado") << std::endl;
-        std::cout << "Arbol vacio: " << (tree->empty() ? "SI" : "NO") << std::endl;
-
-        delete tree;
-    }
-
-    {
-        // Remove: eliminar la raíz con dos hijos
-        BinaryTree<int> *tree = new BinaryTree<int>();
-        tree->add(50);
-        tree->add(30);
-        tree->add(70);
-        tree->add(20);
-        tree->add(40);
-        tree->add(60);
-        tree->add(80);
-
-        /*
-         * Antes:     50
-         *           /  \
-         *         30    70
-         *        /  \   /  \
-         *       20  40 60  80
-         */
-
-        std::cout << std::endl
-                  << "=== Remove raiz con dos hijos (50) ===" << std::endl;
-        std::cout << "Antes:" << std::endl;
-        tree->print_in_order(); // 20, 30, 40, 50, 60, 70, 80
-
-        std::cout << "Remove 50: " << (tree->remove(50) ? "Eliminado" : "No encontrado") << std::endl;
-        std::cout << "Despues (50 reemplazado por su sucesor 60):" << std::endl;
-        tree->print_in_order(); // 20, 30, 40, 60, 70, 80
-
-        delete tree;
-    }
-
-    {
-        // Remove: elemento no existe
-        BinaryTree<int> *tree = new BinaryTree<int>();
-        tree->add(50);
-        tree->add(30);
-        tree->add(70);
-
-        std::cout << std::endl
-                  << "=== Remove elemento inexistente ===" << std::endl;
-        std::cout << "Antes:" << std::endl;
-        tree->print_in_order(); // 30, 50, 70
-
-        std::cout << "Remove 99: " << (tree->remove(99) ? "Eliminado" : "No encontrado") << std::endl;
-        std::cout << "Despues (sin cambios):" << std::endl;
-        tree->print_in_order(); // 30, 50, 70
-
-        delete tree;
-    }
-
-    {
-        // Remove: árbol vacío
-        BinaryTree<int> *tree = new BinaryTree<int>();
-
-        std::cout << std::endl
-                  << "=== Remove en arbol vacio ===" << std::endl;
-        std::cout << "Remove 10: " << (tree->remove(10) ? "Eliminado" : "No encontrado") << std::endl;
-
-        delete tree;
-    }
-
-    {
-        // Remove: eliminar todos los elementos progresivamente
-        BinaryTree<int> *tree = new BinaryTree<int>();
-        tree->add(50);
-        tree->add(30);
-        tree->add(70);
-        tree->add(20);
-        tree->add(40);
-        tree->add(60);
-        tree->add(80);
-
-        std::cout << std::endl
-                  << "=== Remove todos los elementos ===" << std::endl;
-        std::cout << "Inicial:" << std::endl;
-        tree->print_in_order(); // 20, 30, 40, 50, 60, 70, 80
-
-        tree->remove(20);
-        std::cout << "Despues remove 20:" << std::endl;
-        tree->print_in_order(); // 30, 40, 50, 60, 70, 80
-
-        tree->remove(80);
-        std::cout << "Despues remove 80:" << std::endl;
-        tree->print_in_order(); // 30, 40, 50, 60, 70
-
-        tree->remove(50);
-        std::cout << "Despues remove 50:" << std::endl;
-        tree->print_in_order(); // 30, 40, 60, 70
-
-        tree->remove(30);
-        std::cout << "Despues remove 30:" << std::endl;
-        tree->print_in_order(); // 40, 60, 70
-
-        tree->remove(70);
-        std::cout << "Despues remove 70:" << std::endl;
-        tree->print_in_order(); // 40, 60
-
-        tree->remove(40);
-        std::cout << "Despues remove 40:" << std::endl;
-        tree->print_in_order(); // 60
-
-        tree->remove(60);
-        std::cout << "Despues remove 60 (deberia estar vacio):" << std::endl;
-        std::cout << "Arbol vacio: " << (tree->empty() ? "SI" : "NO") << std::endl;
-
-        delete tree;
-    }
-
-    {
-        // Remove: verificar orden in-order después de múltiples remociones
-        BinaryTree<int> *tree = new BinaryTree<int>();
-        tree->add(15);
-        tree->add(10);
-        tree->add(20);
-        tree->add(8);
-        tree->add(12);
-        tree->add(17);
-        tree->add(25);
-
-        /*
-         * Estructura:
-         *        15
-         *       /  \
-         *     10    20
-         *    /  \   /  \
-         *   8  12  17  25
-         */
-
-        std::cout << std::endl
-                  << "=== Verificar orden in-order tras remociones ===" << std::endl;
-        std::cout << "Inicial:" << std::endl;
-        tree->print_in_order(); // 8, 10, 12, 15, 17, 20, 25
-
-        tree->remove(10); // nodo con dos hijos
-        std::cout << "Despues remove 10:" << std::endl;
-        tree->print_in_order(); // 8, 12, 15, 17, 20, 25
-
-        tree->remove(20); // nodo con dos hijos
-        std::cout << "Despues remove 20:" << std::endl;
-        tree->print_in_order(); // 8, 12, 15, 17, 25
-
-        std::cout << "Orden correcto mantenido" << std::endl;
-
-        delete tree;
-    }
-
-    {
-        // Remove: con duplicados
-        BinaryTree<int> *tree = new BinaryTree<int>();
-        tree->add(50);
-        tree->add(30);
-        tree->add(50); // duplicado
-        tree->add(30); // duplicado
-
-        std::cout << std::endl
-                  << "=== Remove con duplicados ===" << std::endl;
-        std::cout << "Antes:" << std::endl;
-        tree->print_in_order(); // 30, 30, 50, 50
-
-        std::cout << "Remove 50 (elimina primera aparicion): " << (tree->remove(50) ? "Eliminado" : "No encontrado") << std::endl;
-        std::cout << "Despues:" << std::endl;
-        tree->print_in_order(); // 30, 30, 50
-
-        std::cout << "Remove 50 otra vez: " << (tree->remove(50) ? "Eliminado" : "No encontrado") << std::endl;
-        std::cout << "Despues:" << std::endl;
-        tree->print_in_order(); // 30, 30
-
-        delete tree;
-    }
-}
+class BinaryNode
+{
 
 private:
     T value;
@@ -387,11 +75,13 @@ bool BinaryTree<T>::remove_helper(BinaryNode<T> *&node, T a)
 
     if (a < node->get_value())
     {
-        return remove_helper(node->get_left(), a);
+        BinaryNode<T> *left = node->get_left();
+        return remove_helper(left, a);
     }
     else if (a > node->get_value())
     {
-        return remove_helper(node->get_right(), a);
+        BinaryNode<T> *right = node->get_right();
+        return remove_helper(right, a);
     }
     else
     {
@@ -426,10 +116,10 @@ bool BinaryTree<T>::remove_helper(BinaryNode<T> *&node, T a)
 
             node->set_value(current->get_value());
 
-            if (currentParent->getLeft() == current)
-                currentParent->setLeft(current->getRight());
+            if (currentParent->get_left() == current)
+                currentParent->set_left(current->get_right());
             else
-                currentParent->setRight(current->getRight());
+                currentParent->set_right(current->get_right());
 
             delete current;
         }
@@ -500,7 +190,7 @@ bool BinaryTree<T>::remove(T a)
         return false;
     }
 
-    return remove_helper(get_root(), a);
+    return remove_helper(root, a);
 }
 
 template <typename T>
