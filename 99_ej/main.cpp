@@ -2,6 +2,7 @@
 #include "list_base.hpp"
 #include "lists.hpp"
 #include "double_list.cpp"
+#include "binary_tree.cpp"
 
 void testingNodeAndList()
 {
@@ -22,10 +23,13 @@ void testingNodeAndList()
 int main()
 {
     // Testing Nodos y Listas
-    testingNodeAndList();
+    // testingNodeAndList();
 
     // Testing Listas doblemente enlazadas
-    testingDoubleList();
+    // testingDoubleList();
+
+    // Testing Arboles binarios
+    testingBinaryTree();
 
     return 0;
 }
