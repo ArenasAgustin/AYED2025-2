@@ -234,6 +234,8 @@ void testingDoubleList()
         double_list->add(4);
         double_list->print();         // 1 2 3 4
         double_list->print_reverse(); // 4 3 2 1
+
+        delete double_list;
     }
 
     {
@@ -252,6 +254,8 @@ void testingDoubleList()
         list->print(); // 2
         list->remove(2);
         list->print(); // lista vacia
+
+        delete list;
     }
 
     {
@@ -270,6 +274,8 @@ void testingDoubleList()
         list_opt->print(); // 2
         list_opt->remove_opt(2);
         list_opt->print(); // lista vacia
+
+        delete list_opt;
     }
 
     {
@@ -289,6 +295,8 @@ void testingDoubleList()
         list_dup->print();   // 1 3
         list_dup->remove(2); // no borra
         list_dup->print();   // 1 3
+
+        delete list_dup;
     }
 
     {
@@ -299,6 +307,8 @@ void testingDoubleList()
         list_nf->print();    // 5 6
         list_nf->remove(42); // no borra
         list_nf->print();    // 5 6
+
+        delete list_nf;
     }
 
     {
@@ -312,6 +322,8 @@ void testingDoubleList()
         list_rev->remove(20);
         list_rev->print();         // 10 30
         list_rev->print_reverse(); // 30 10
+
+        delete list_rev;
     }
 
     {
@@ -319,5 +331,7 @@ void testingDoubleList()
         DoubleList<int> *list_empty = new DoubleList<int>();
         list_empty->print();         // lista vacia
         list_empty->print_reverse(); // lista vacia
+
+        delete list_empty;
     }
 }
