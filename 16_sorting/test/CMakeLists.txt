@@ -1,0 +1,2 @@
+add_executable(16_test_sorting test_sorting.cpp)
+target_link_libraries(16_test_sorting PRIVATE gtest gtest_main)
