@@ -75,13 +75,17 @@ bool BinaryTree<T>::remove_helper(BinaryNode<T> *&node, T a)
 
     if (a < node->get_value())
     {
-        BinaryNode<T> *left = node->get_left();
-        return remove_helper(left, a);
+        BinaryNode<T> *left_child = node->get_left();
+        bool result = remove_helper(left_child, a);
+        node->set_left(left_child);
+        return result;
     }
     else if (a > node->get_value())
     {
-        BinaryNode<T> *right = node->get_right();
-        return remove_helper(right, a);
+        BinaryNode<T> *right_child = node->get_right();
+        bool result = remove_helper(right_child, a);
+        node->set_right(right_child);
+        return result;
     }
     else
     {
@@ -144,7 +148,7 @@ bool BinaryTree<T>::empty()
 template <typename T>
 void BinaryTree<T>::add(T a)
 {
-    BinaryNode<T> *new_node = new BinaryNode(a);
+    BinaryNode<T> *new_node = new BinaryNode<T>(a);
 
     if (empty())
     {
