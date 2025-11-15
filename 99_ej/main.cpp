@@ -3,6 +3,7 @@
 #include "lists.hpp"
 #include "double_list.cpp"
 #include "binary_tree.cpp"
+#include "avl_tree.cpp"
 
 void testingNodeAndList()
 {
@@ -29,7 +30,10 @@ int main()
     // testingDoubleList();
 
     // Testing Arboles binarios
-    testingBinaryTree();
+    // testingBinaryTree();
+
+    // Testing Arboles AVL
+    testingAVLTree();
 
     return 0;
 }
