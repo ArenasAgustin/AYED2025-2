@@ -41,26 +41,98 @@ class RegistroSensoresABB
 public:
     void insertar(int temperatura)
     {
+        Nodo *node = new Nodo(temperatura);
+
+        if (raiz == nullptr)
+        {
+            raiz = node;
+            return;
+        }
+
+        Nodo *current = raiz;
+
+        while (true)
+        {
+            if (current->temp > temperatura)
+            {
+                if (current->izq != nullptr)
+                {
+                    current = current->izq;
+                }
+                else
+                {
+                    current->izq = node;
+                    return;
+                }
+            }
+            else
+            {
+                if (current->der != nullptr)
+                {
+                    current = current->der;
+                }
+                else
+                {
+                    current->der = node;
+                    return;
+                }
+            }
+        }
     }
 
     int contarCriticos(int umbral)
     {
+        return contarCritRec(umbral, raiz);
     }
 
     void imprimirCriticos(int umbral)
     {
+        int c = contarCriticos(umbral);
+
+        cout << "Sensores criticos (temp >= " << umbral << "): " << c << endl;
+    }
+
+    void imprimir()
+    {
+        imprimirRec(raiz);
     }
 
     RegistroSensoresABB() : raiz(nullptr) {}
 
 private:
     Nodo *raiz;
+
+    int contarCritRec(int umbral, Nodo *current)
+    {
+        if (current == nullptr)
+            return 0;
+
+        if (current->temp >= umbral)
+            return 1 + contarCritRec(umbral, current->izq) + contarCritRec(umbral, current->der);
+        else
+            return contarCritRec(umbral, current->der);
+    }
+
+    void imprimirRec(Nodo *current)
+    {
+        if (current == nullptr)
+            return;
+
+        cout << "Nodo" << current->temp << endl;
+
+        cout << "Izq: " << endl;
+        imprimirRec(current->izq);
+
+        cout << "Der: " << endl;
+        imprimirRec(current->der);
+    }
 };
 
 // Test
 void testingRegistroSensoresABB()
 {
     {
+        cout << "TEST 1: testingRegistroSensoresABB" << endl;
         RegistroSensoresABB sistema;
 
         sistema.insertar(42);
@@ -72,6 +144,7 @@ void testingRegistroSensoresABB()
     }
 
     {
+        cout << "TEST 2: testingRegistroSensoresABB" << endl;
         RegistroSensoresABB sistema;
 
         sistema.insertar(10);
@@ -107,21 +180,51 @@ public:
     // Agrega una conexión bidireccional entre dos módulos
     void agregarConexion(const string &a, const string &b)
     {
+        grafo[a].push_back(b);
+        grafo[b].push_back(a);
     }
 
     // Devuelve true si existe conexión directa entre a y b
     bool estanConectados(const string &a, const string &b)
     {
+        for (std::vector<string>::iterator it = grafo[a].begin(); it != grafo[a].end(); it++)
+        {
+            if (*it == b)
+                return true;
+        }
+
+        return false;
     }
 
     // Devuelve cuántos módulos son alcanzables desde el módulo de inicio (incluido), usando DFS
     int alcanzablesDesde(const string &inicio)
     {
+        set<string> visitados;
+        visitados.insert(inicio);
+
+        dfs(inicio, visitados);
+
+        int c = 0;
+
+        for (std::set<string>::iterator it = visitados.begin(); it != visitados.end(); it++)
+        {
+            c++;
+        }
+
+        return c;
     }
 
 private:
     void dfs(const string &actual, set<string> &visitados)
     {
+        for (std::vector<string>::iterator it = grafo[actual].begin(); it != grafo[actual].end(); it++)
+        {
+            if (!visitados.count(*it))
+            {
+                visitados.insert(*it);
+                dfs(*it, visitados);
+            }
+        }
     }
 };
 
@@ -129,6 +232,7 @@ private:
 void testingRedDeSensores()
 {
     {
+        cout << "TEST 1: testingRedDeSensores" << endl;
         RedDeSensores red;
 
         red.agregarConexion("A", "B");
@@ -138,6 +242,7 @@ void testingRedDeSensores()
     }
 
     {
+        cout << "TEST 2: testingRedDeSensores" << endl;
         RedDeSensores red;
 
         red.agregarConexion("CPU", "Sensor1");
@@ -153,6 +258,7 @@ void testingRedDeSensores()
     }
 
     {
+        cout << "TEST 3: testingRedDeSensores" << endl;
         RedDeSensores red;
 
         red.agregarConexion("M1", "M2");

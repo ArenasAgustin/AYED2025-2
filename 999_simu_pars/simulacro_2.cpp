@@ -19,34 +19,50 @@ El árbol vacío se considera balanceado
 
 Implementá desde cero:
 
-La función recursiva esBalanceadoRecursivo(Nodo*)
+La función recursiva esBalanceadoRecursivo(Nodo2*)
 
 La clase BST, que recibe la raíz en su constructor y expone un método bool esBalanceado() que retorna true si el árbol está balanceado
 */
-struct Nodo
+struct Nodo2
 {
     int valor;
-    Nodo *izquierdo;
-    Nodo *derecho;
+    Nodo2 *izquierdo;
+    Nodo2 *derecho;
 
-    Nodo(int v) : valor(v), izquierdo(nullptr), derecho(nullptr) {}
+    Nodo2(int v) : valor(v), izquierdo(nullptr), derecho(nullptr) {}
 };
 
 class BST
 {
 private:
-    Nodo *raiz;
+    Nodo2 *raiz;
 
     // Retorna la altura si está balanceado, o -1 si no lo está
-    int esBalanceadoRecursivo(Nodo *nodo)
+    int esBalanceadoRecursivo(Nodo2 *nodo)
     {
+        if (nodo == nullptr)
+            return 0;
+
+        int izq = esBalanceadoRecursivo(nodo->izquierdo);
+        int der = esBalanceadoRecursivo(nodo->derecho);
+
+        if (izq == -1 || der == -1)
+            return -1;
+
+        int bal = abs(izq - der);
+
+        if (bal > 1)
+            return -1;
+
+        return 1 + max(izq, der);
     }
 
 public:
-    BST(Nodo *&r) : raiz(r) {}
+    BST(Nodo2 *&r) : raiz(r) {}
 
     bool esBalanceado()
     {
+        return esBalanceadoRecursivo(raiz) != -1;
     }
 };
 
@@ -54,46 +70,56 @@ public:
 void testingBST()
 {
     {
-        Nodo *raiz = new Nodo(10);
-        raiz->izquierdo = new Nodo(5);
-        raiz->derecho = new Nodo(15);
-        raiz->izquierdo->izquierdo = new Nodo(3);
+        cout << "TEST 1: testingBST" << endl;
+
+        Nodo2 *raiz = new Nodo2(10);
+        raiz->izquierdo = new Nodo2(5);
+        raiz->derecho = new Nodo2(15);
+        raiz->izquierdo->izquierdo = new Nodo2(3);
         BST *arbol = new BST(raiz);
 
         cout << (arbol->esBalanceado() ? "Si" : "No") << endl; // Si
     }
 
     {
-        Nodo *raiz = new Nodo(10);
-        raiz->izquierdo = new Nodo(5);
-        raiz->izquierdo->izquierdo = new Nodo(3);
-        raiz->izquierdo->izquierdo->izquierdo = new Nodo(1);
+        cout << "TEST 2: testingBST" << endl;
+
+        Nodo2 *raiz = new Nodo2(10);
+        raiz->izquierdo = new Nodo2(5);
+        raiz->izquierdo->izquierdo = new Nodo2(3);
+        raiz->izquierdo->izquierdo->izquierdo = new Nodo2(1);
         BST *arbol = new BST(raiz);
 
         cout << (arbol->esBalanceado() ? "Si" : "No") << endl; // No
     }
 
     {
-        Nodo *raiz = new Nodo(1);
+        cout << "TEST 3: testingBST" << endl;
+
+        Nodo2 *raiz = new Nodo2(1);
         BST *arbol = new BST(raiz);
 
         cout << (arbol->esBalanceado() ? "Si" : "No") << endl; // Si
     }
 
     {
-        Nodo *raiz = nullptr;
+        cout << "TEST 4: testingBST" << endl;
+
+        Nodo2 *raiz = nullptr;
         BST *arbol = new BST(raiz);
 
         cout << (arbol->esBalanceado() ? "Si" : "No") << endl; // Si
     }
 
     {
-        Nodo *raiz = new Nodo(20);
-        raiz->izquierdo = new Nodo(10);
-        raiz->derecho = new Nodo(30);
-        raiz->izquierdo->derecho = new Nodo(15);
-        raiz->derecho->izquierdo = new Nodo(25);
-        raiz->derecho->derecho = new Nodo(35);
+        cout << "TEST 5: testingBST" << endl;
+
+        Nodo2 *raiz = new Nodo2(20);
+        raiz->izquierdo = new Nodo2(10);
+        raiz->derecho = new Nodo2(30);
+        raiz->izquierdo->derecho = new Nodo2(15);
+        raiz->derecho->izquierdo = new Nodo2(25);
+        raiz->derecho->derecho = new Nodo2(35);
         BST *arbol = new BST(raiz);
 
         cout << (arbol->esBalanceado() ? "Si" : "No") << endl; // Si
@@ -113,7 +139,7 @@ Las conexiones físicas entre ellos son aristas.
 
 Tu tarea:
 
-Implementa una clase RedDeSensores que permita:
+Implementa una clase RedDeSensores2 que permita:
 
 Agregar conexiones entre módulos.
 
@@ -121,10 +147,10 @@ Verificar si dos módulos están directamente conectados (de forma iterativa).
 
 Calcular cuántos módulos son alcanzables desde un nodo dado (usando DFS recursivo).
 */
-class RedDeSensores
+class RedDeSensores2
 {
 public:
-    RedDeSensores(int cantidadModulos)
+    RedDeSensores2(int cantidadModulos)
     {
         cantidad = cantidadModulos;
         adyacencias.reserve(cantidad);
@@ -139,39 +165,62 @@ public:
 
     void imprimirConexion(int a, int b)
     {
-        // cout << "Conexion directa (" << a << " - " << b << "): " << c << "\n";
+        int conectados = adyacencias[a][b] == 1 ? 1 : 0;
+
+        cout << "Conexion directa (" << a << " - " << b << "): " << conectados << "\n";
     }
 
     void imprimirAlcanzables(int desde)
     {
-        // cout << "Modulos alcanzables desde " << desde << ": " << c << "\n";
+        int *visitados = new int[cantidad]();
+
+        int c = alcanzables(desde, visitados);
+
+        cout << "Modulos alcanzables desde " << desde << ": " << c << "\n";
     }
 
 private:
     int cantidad;
     std::vector<std::vector<int>> adyacencias;
 
-    int alcanzables(int d, int v[])
+    int alcanzables(int desde, int visitados[])
     {
+        visitados[desde] = 1;
+        int c = 1;
+
+        for (int i = 0; i < cantidad; i++)
+        {
+            if (visitados[i] != 1 && adyacencias[desde][i] == 1)
+            {
+                visitados[i] = 1;
+                c += alcanzables(i, visitados);
+            }
+        }
+
+        return c;
     }
 };
 
 // Test
-void testingRedDeSensores()
+void testingRedDeSensores2()
 {
     {
-        RedDeSensores red(5);
+        cout << "TEST 1: testingRedDeSensores2" << endl;
+
+        RedDeSensores2 red(5);
 
         red.agregarConexion(0, 1);
         red.agregarConexion(1, 2);
         red.agregarConexion(3, 4);
 
-        red.imprimirConexion(0, 1); // Conexion directa (0 - 1): Si
-        red.imprimirConexion(1, 3); // Conexion directa (1 - 3): No
+        red.imprimirConexion(0, 1); // Conexion directa (0 - 1): 1
+        red.imprimirConexion(1, 3); // Conexion directa (1 - 3): 0
     }
 
     {
-        RedDeSensores red(6);
+        cout << "TEST 2: testingRedDeSensores2" << endl;
+
+        RedDeSensores2 red(6);
 
         red.agregarConexion(0, 1);
         red.agregarConexion(1, 2);

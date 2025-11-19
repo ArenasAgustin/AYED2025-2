@@ -1,1 +1,1 @@
-add_executable(99_ej main.cpp)
+add_executable(999_simu_pars main.cpp)
