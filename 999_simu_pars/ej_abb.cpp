@@ -21,19 +21,36 @@ struct Evento
     bool operator==(Evento &o);
 };
 
+bool Evento::operator<(Evento &o)
+{
+    if (ymdhm < o.ymdhm)
+        return true;
+    if (ymdhm > o.ymdhm)
+        return false;
+    return titulo < o.titulo;
+}
+
+bool Evento::operator==(Evento &o)
+{
+    return ymdhm == o.ymdhm && titulo == o.titulo;
+}
+
 /* =========================================
-   Nodo genérico para ABB (punteros crudos)
+   NodoABB genérico para ABB (punteros crudos)
    ========================================= */
 template <class T>
-class Nodo
+class NodoABB
 {
 public:
     T dato;
-    Nodo *izq;
-    Nodo *der;
+    NodoABB *izq;
+    NodoABB *der;
 
-    Nodo(T x);
+    NodoABB(T x);
 };
+
+template <class T>
+NodoABB<T>::NodoABB(T x) : dato(x), izq(nullptr), der(nullptr) {}
 
 /* =========================================
    Árbol Binario de Búsqueda (ABB<T>)
@@ -45,22 +62,22 @@ template <class T>
 class ABB
 {
 private:
-    Nodo<T> *raiz;
+    NodoABB<T> *raiz;
 
     // ---- helpers básicos ----
-    void clearRec(Nodo<T> *p);
-    int tamRec(Nodo<T> *p);
-    void inordenRec(Nodo<T> *p, std::vector<T> &out);
-    Nodo<T> *minNode(Nodo<T> *p);
+    void clearRec(NodoABB<T> *p);
+    int tamRec(NodoABB<T> *p);
+    void inordenRec(NodoABB<T> *p, std::vector<T> &out);
+    NodoABB<T> *minNode(NodoABB<T> *p);
 
     // ---- inserción / borrado ----
-    Nodo<T> *insertarRec(Nodo<T> *p, T x);
-    Nodo<T> *eraseRec(Nodo<T> *p, T x);
+    NodoABB<T> *insertarRec(NodoABB<T> *p, T x);
+    NodoABB<T> *eraseRec(NodoABB<T> *p, T x);
 
     // ---- extensiones de orden ----
-    Nodo<T> *lowerBoundHelper(Nodo<T> *p, T x);               // iterativo
-    Nodo<T> *predecessorHelper(Nodo<T> *p, T x);              // iterativo
-    void rangoRec(Nodo<T> *p, T a, T b, std::vector<T> &out); // recursivo
+    NodoABB<T> *lowerBoundHelper(NodoABB<T> *p, T x);            // iterativo
+    NodoABB<T> *predecessorHelper(NodoABB<T> *p, T x);           // iterativo
+    void rangoRec(NodoABB<T> *p, T a, T b, std::vector<T> &out); // recursivo
 
 public:
     ABB();
@@ -80,6 +97,173 @@ public:
     std::vector<T> rango(T a, T b);
 };
 
+// ============ ABB Implementation ============
+
+template <class T>
+ABB<T>::ABB() : raiz(nullptr) {}
+
+template <class T>
+ABB<T>::~ABB()
+{
+    clear();
+}
+
+template <class T>
+void ABB<T>::clearRec(NodoABB<T> *p)
+{
+    if (p == nullptr)
+        return;
+    clearRec(p->izq);
+    clearRec(p->der);
+    delete p;
+}
+
+template <class T>
+void ABB<T>::clear()
+{
+    clearRec(raiz);
+    raiz = nullptr;
+}
+
+template <class T>
+bool ABB<T>::isEmpty()
+{
+    return raiz == nullptr;
+}
+
+template <class T>
+int ABB<T>::tamRec(NodoABB<T> *p)
+{
+    if (p == nullptr)
+        return 0;
+    return 1 + tamRec(p->izq) + tamRec(p->der);
+}
+
+template <class T>
+int ABB<T>::size()
+{
+    return tamRec(raiz);
+}
+
+template <class T>
+void ABB<T>::inordenRec(NodoABB<T> *p, std::vector<T> &out)
+{
+    if (p == nullptr)
+        return;
+    inordenRec(p->izq, out);
+    out.push_back(p->dato);
+    inordenRec(p->der, out);
+}
+
+template <class T>
+std::vector<T> ABB<T>::inorden()
+{
+    std::vector<T> result;
+    inordenRec(raiz, result);
+    return result;
+}
+
+template <class T>
+NodoABB<T> *ABB<T>::minNode(NodoABB<T> *p)
+{
+    while (p != nullptr && p->izq != nullptr)
+        p = p->izq;
+    return p;
+}
+
+template <class T>
+NodoABB<T> *ABB<T>::insertarRec(NodoABB<T> *p, T x)
+{
+    if (p == nullptr)
+        return new NodoABB<T>(x);
+
+    if (x < p->dato)
+        p->izq = insertarRec(p->izq, x);
+    else if (p->dato < x)
+        p->der = insertarRec(p->der, x);
+    // else: x == p->dato, no insert duplicates
+
+    return p;
+}
+
+template <class T>
+void ABB<T>::insert(T x)
+{
+    raiz = insertarRec(raiz, x);
+}
+
+template <class T>
+NodoABB<T> *ABB<T>::eraseRec(NodoABB<T> *p, T x)
+{
+    if (p == nullptr)
+        return nullptr;
+
+    if (x < p->dato)
+    {
+        p->izq = eraseRec(p->izq, x);
+    }
+    else if (p->dato < x)
+    {
+        p->der = eraseRec(p->der, x);
+    }
+    else
+    {
+        // Found node to delete
+        if (p->izq == nullptr)
+        {
+            NodoABB<T> *temp = p->der;
+            delete p;
+            return temp;
+        }
+        else if (p->der == nullptr)
+        {
+            NodoABB<T> *temp = p->izq;
+            delete p;
+            return temp;
+        }
+        else
+        {
+            // Two children: get inorder successor
+            NodoABB<T> *succ = minNode(p->der);
+            p->dato = succ->dato;
+            p->der = eraseRec(p->der, succ->dato);
+        }
+    }
+    return p;
+}
+
+template <class T>
+void ABB<T>::erase(T x)
+{
+    raiz = eraseRec(raiz, x);
+}
+
+template <class T>
+T &ABB<T>::lower_bound(T x)
+{
+    NodoABB<T> *result = lowerBoundHelper(raiz, x);
+    if (result == nullptr)
+        throw std::runtime_error("lower_bound: no encontrado");
+    return result->dato;
+}
+
+template <class T>
+T &ABB<T>::predecessor(T x)
+{
+    NodoABB<T> *result = predecessorHelper(raiz, x);
+    if (result == nullptr)
+        throw std::runtime_error("predecessor: no encontrado");
+    return result->dato;
+}
+
+template <class T>
+std::vector<T> ABB<T>::rango(T a, T b)
+{
+    std::vector<T> result;
+    rangoRec(raiz, a, b, result);
+    return result;
+}
+
 /* =========================================
    Calendar: fachada sobre ABB<Evento>
    ========================================= */
@@ -89,47 +273,114 @@ private:
     ABB<Evento> tree;
 
     // claves auxiliares para intervalos
-    Evento keyFloor(int ymdhm);
-    Evento keyCeil(int ymdhm);
+    Evento keyFloor(long long ymdhm);
+    Evento keyCeil(long long ymdhm);
 
 public:
     Calendar();
 
     void agregarEvento(Evento e);
-    void removerEvento(int ymdhm, std::string titulo);
+    void removerEvento(long long ymdhm, std::string titulo);
 
-    Evento proximo(int ymdhm);
-    std::vector<Evento> entre(int a, int b);
-    std::vector<Evento> conflictosEn(int ymdhm);
+    Evento proximo(long long ymdhm);
+    std::vector<Evento> entre(long long a, long long b);
+    std::vector<Evento> conflictosEn(long long ymdhm);
 
     int size();
     std::vector<Evento> inorden();
 };
 
+// ============ Calendar Implementation ============
+
+Calendar::Calendar() {}
+
+Evento Calendar::keyFloor(long long ymdhm)
+{
+    return {ymdhm, "", ""};
+}
+
+Evento Calendar::keyCeil(long long ymdhm)
+{
+    return {ymdhm, "~", ""};
+}
+
+void Calendar::agregarEvento(Evento e)
+{
+    tree.insert(e);
+}
+
+void Calendar::removerEvento(long long ymdhm, std::string titulo)
+{
+    Evento e = {ymdhm, titulo, ""};
+    tree.erase(e);
+}
+
+Evento Calendar::proximo(long long ymdhm)
+{
+    Evento key = keyFloor(ymdhm);
+    return tree.lower_bound(key);
+}
+
+std::vector<Evento> Calendar::entre(long long a, long long b)
+{
+    Evento keyA = keyFloor(a);
+    Evento keyB = keyCeil(b);
+    return tree.rango(keyA, keyB);
+}
+
+std::vector<Evento> Calendar::conflictosEn(long long ymdhm)
+{
+    return entre(ymdhm, ymdhm);
+}
+
+int Calendar::size()
+{
+    return tree.size();
+}
+
+std::vector<Evento> Calendar::inorden()
+{
+    return tree.inorden();
+}
+
 //  Ej 1
 /*
 Implementá la operación lower_bound(x) sobre un ABB (árbol binario de búsqueda) que guarda elementos ordenados por operator<.
-Tu tarea es completar el helper iterativo lowerBoundHelper(p, x) que debe encontrar el primer elemento del árbol que sea >= x (usando solo comparaciones con operator<, sin <=/>=).
+Tu tarea es completar el helper iterativo lowerBoundHelper(p, x) que debe encontrar el primer elemento del árbol que sea >= x (usando solo comparaciones con operator<, sin <= / >=).
 Si el candidato no existe, lower_bound debe lanzar runtime_error("lower_bound: no encontrado").
 Recordá que el recorrido debe ser O(h) (h = altura): usá una búsqueda binaria manteniendo un mejor candidato (best) mientras bajás por el árbol.
 */
 template <class T>
-Nodo<T> *ABB<T>::lowerBoundHelper(Nodo<T> *p, T x)
+NodoABB<T> *ABB<T>::lowerBoundHelper(NodoABB<T> *p, T x)
 {
-    Nodo<T> *r = nullptr;
+    NodoABB<T> *best = nullptr;
 
-    return r;
+    while (p != nullptr)
+    {
+        if (p->dato < x)
+        {
+            p = p->der;
+        }
+        else
+        {
+            best = p;
+            p = p->izq;
+        }
+    }
+
+    return best;
 }
 
 // Test
 void testingLowerBound()
 {
     {
+        std::cout << "TEST 1: testingLowerBound" << std::endl;
         Calendar cal;
 
-        cal.agregarEvento({202510221000, "Standup", ""});
-        cal.agregarEvento({202510221000, "Aviso", ""});
-        cal.agregarEvento({202510221300, "Almuerzo", ""});
+        cal.agregarEvento({202510221000LL, "Standup", ""});
+        cal.agregarEvento({202510221000LL, "Aviso", ""});
+        cal.agregarEvento({202510221300LL, "Almuerzo", ""});
 
         Evento e = cal.proximo(202510221000);
 
@@ -137,11 +388,12 @@ void testingLowerBound()
     }
 
     {
+        std::cout << "TEST 2: testingLowerBound" << std::endl;
         Calendar cal;
 
-        cal.agregarEvento({202510221000, "A", ""});
-        cal.agregarEvento({202510221300, "B", ""});
-        cal.agregarEvento({202510221530, "C", ""});
+        cal.agregarEvento({202510221000LL, "A", ""});
+        cal.agregarEvento({202510221300LL, "B", ""});
+        cal.agregarEvento({202510221530LL, "C", ""});
 
         Evento e = cal.proximo(202510221200);
 
@@ -149,9 +401,10 @@ void testingLowerBound()
     }
 
     {
+        std::cout << "TEST 3: testingLowerBound" << std::endl;
         Calendar cal;
-        cal.agregarEvento({202401010900, "A", ""});
-        cal.agregarEvento({202401011000, "B", ""});
+        cal.agregarEvento({202401010900LL, "A", ""});
+        cal.agregarEvento({202401011000LL, "B", ""});
 
         try
         {
@@ -168,22 +421,36 @@ void testingLowerBound()
 //  Ej 2
 /*
 Implementá la operación predecessor(x) sobre un ABB (árbol binario de búsqueda) que guarda elementos ordenados por operator<.
-Tu tarea es completar el helper iterativo predecessorHelper(p, x) que debe encontrar el elemento estrictamente menor que x más grande (el “inmediato anterior” a x en el orden del árbol), usando solo comparaciones con operator< (no uses <=/>=).
+Tu tarea es completar el helper iterativo predecessorHelper(p, x) que debe encontrar el elemento estrictamente menor que x más grande (el “inmediato anterior” a x en el orden del árbol), usando solo comparaciones con operator< (no uses <= / >=).
 Si no existe un candidato (todos son ≥ x o el árbol está vacío), predecessor debe lanzar runtime_error("predecessor: no encontrado").
 La búsqueda debe ser O(h) (h = altura): mantené un mejor candidato (best) mientras descendés por el árbol, moviéndote a derecha cuando p->dato < x y a izquierda en caso contrario.
 */
 template <class T>
-Nodo<T> *ABB<T>::predecessorHelper(Nodo<T> *p, T x)
+NodoABB<T> *ABB<T>::predecessorHelper(NodoABB<T> *p, T x)
 {
-    Nodo<T> *r = nullptr;
+    NodoABB<T> *best = nullptr;
 
-    return r;
+    while (p != nullptr)
+    {
+        if (p->dato < x)
+        {
+            best = p;
+            p = p->der;
+        }
+        else
+        {
+            p = p->izq;
+        }
+    }
+
+    return best;
 }
 
 // Test
 void testingPredecessor()
 {
     {
+        std::cout << "TEST 1: testingPredecessor" << std::endl;
         ABB<Evento> t;
 
         t.insert({202510221000LL, "A", ""});
@@ -197,6 +464,7 @@ void testingPredecessor()
     }
 
     {
+        std::cout << "TEST 2: testingPredecessor" << std::endl;
         ABB<Evento> t;
 
         t.insert({202510221000LL, "A", ""});
@@ -216,6 +484,7 @@ void testingPredecessor()
     }
 
     {
+        std::cout << "TEST 3: testingPredecessor" << std::endl;
         ABB<Evento> t;
         long long T = 202510221000LL;
 
@@ -246,15 +515,28 @@ Visitar derecha solo si pueden existir valores en rango: p->dato < b.
 El wrapper rango(a,b) crea el vector, llama al helper y lo retorna.
 */
 template <class T>
-void ABB<T>::rangoRec(Nodo<T> *p, T a, T b, vector<T> &out)
+void ABB<T>::rangoRec(NodoABB<T> *p, T a, T b, vector<T> &out)
 {
+    if (p == nullptr)
+        return;
+
+    if (p->dato < a)
+        rangoRec(p->der, a, b, out);
+    else if (!(p->dato < a) && !(b < p->dato))
+    {
+        out.push_back(p->dato);
+        rangoRec(p->izq, a, b, out);
+        rangoRec(p->der, a, b, out);
+    }
+    else if (b < p->dato)
+        rangoRec(p->izq, a, b, out);
 }
 
 // Test
 void testingRango()
 {
     {
-
+        std::cout << "TEST 1: testingRango" << std::endl;
         ABB<Evento> t;
 
         t.insert({202510221000LL, "A", ""});
@@ -274,6 +556,7 @@ void testingRango()
     }
 
     {
+        std::cout << "TEST 2: testingRango" << std::endl;
         ABB<Evento> t;
         long long T = 202510221000LL;
 
@@ -293,6 +576,7 @@ void testingRango()
     }
 
     {
+        std::cout << "TEST 3: testingRango" << std::endl;
         ABB<Evento> t;
 
         t.insert({202401010900LL, "A", ""});
