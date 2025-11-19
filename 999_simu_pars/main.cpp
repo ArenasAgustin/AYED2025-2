@@ -1,6 +1,7 @@
 #include <iostream>
 #include "simulacro_1.cpp"
 #include "simulacro_2.cpp"
+#include "parcial_2.cpp"
 
 int main()
 {
@@ -12,7 +13,11 @@ int main()
 
     // simulacro_2.cpp
     // testingBST();
-    testingRedDeSensores2();
+    // testingRedDeSensores2();
+
+    // parcial_2.cpp
+    testingArbolBinario();
+    testingGrafo();
 
     return 0;
 }
